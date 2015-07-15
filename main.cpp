@@ -9,6 +9,8 @@ extern "C" {
 
 using namespace std;
 
+#define OUTPUT_JS
+
 int main(int argc, char * argv[])
 {
 	if (argc < 2) {
@@ -40,17 +42,34 @@ int main(int argc, char * argv[])
 	cvReleaseImage(&src_img);
 
 	int sum = 0, others = 0;
-	CountSortData outputArray[9];
-	CountSortList_output(outputArray, 9, &sum);
+	const int outputSize = 20;
+	CountSortData outputArray[outputSize];
+	CountSortList_output(outputArray, outputSize, &sum);
+#ifdef OUTPUT_JS
+	printf("var countSum = %d;\n", sum);
+	printf("var dataArr = new Array();\n");
+	printf("var countArr = new Array();\n");
+#else
 	printf("sum is %d\n", sum);
+#endif
 	others = sum;
-	for (int i=0; i<9; i++) {
+	for (int i=0; i<outputSize; i++) {
+#ifdef OUTPUT_JS
+		printf("dataArr[%d]=\"#%06X\";\n", i, outputArray[i].data);
+		printf("countArr[%d]=\"%d\";\n", i, outputArray[i].count);
+#else
 		printf("[%d]data is 0x%06X, percent %f%%, count is %d\n",
 			i, outputArray[i].data, (double)outputArray[i].count*100/sum, outputArray[i].count);
+#endif
 		others -= outputArray[i].count;
 	}
 	CountSortList_deinit();
+#ifdef OUTPUT_JS
+	printf("dataArr[%d]=\"#%06X\";\n", outputSize, 0);
+	printf("countArr[%d]=\"%d\";\n", outputSize, others);
+#else
 	printf("[%d] others sumary , percent %f%%, count is %d\n",
-			10, (double)others*100/sum, others);
+			outputSize, (double)others*100/sum, others);
+#endif
 	return 0;
 }
