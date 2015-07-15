@@ -1,7 +1,8 @@
 
-#include <iostream>
-#include "opencv/cv.h"
-#include "opencv/highgui.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "opencv2/highgui/highgui_c.h"
 
 extern "C" {
 	#include "CountSortList.h"
